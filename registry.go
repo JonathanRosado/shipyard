@@ -8,6 +8,8 @@ type Registry struct {
 	ID             string                   `json:"id,omitempty" gorethink:"id,omitempty"`
 	Name           string                   `json:"name,omitempty" gorethink:"name,omitempty"`
 	Addr           string                   `json:"addr,omitempty", gorethink:"addr,omitempty"`
+	Username       string                   `json:"username,omitempty" gorethink:"username,omitempty"`
+	Password       string                   `json:"password,omitempty" gorethink:"password,omitempty"`
 	registryClient *registry.RegistryClient `json:"-" gorethink:"-"`
 }
 
