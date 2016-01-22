@@ -6,6 +6,7 @@ rethinkdb:
         - "29015"
 proxy:
     image: ehazlett/docker-proxy:latest
+    command: -D
     volumes:
         - "/var/run/docker.sock:/var/run/docker.sock"
     ports:
@@ -28,6 +29,27 @@ media:
     volumes:
         - "/go/src/github.com/shipyard/shipyard/controller/static"
 
+registry:
+    image: registry:0.8.1
+    volumes:
+        - /myregistry:/registry
+    ports:
+        - "80:5000"
+    environment:
+        - "SETTINGS_FLAVOR=local"
+        - "SEARCH_BACKEND=sqlalchemy"
+        - "STORAGE_PATH=/registry"
+authproxy:
+    image: quay.io/aptible/registry-proxy
+    links:
+        - registry
+    ports:
+        - "443:443"
+    environment:
+        - AUTH_CREDENTIALS=admin:admin
+    volumes: 
+        - /home/andreea/external:/etc/nginx/ssl
+
 controller:
     build: .
     dockerfile: Dockerfile.build
@@ -36,7 +58,10 @@ controller:
     links:
         - rethinkdb
         - swarm
+        - registry
     volumes_from:
         - media
     ports:
         - "8080:8080"
+    environment:
+       - no_proxy=rethinkdb,swarm,media,controller,registry

@@ -12,6 +12,8 @@
         vm.addRegistry = addRegistry;
         vm.name = "";
         vm.addr = "";
+        vm.username = "";
+        vm.password = "";
         vm.request = null;
 
         function isValid() {
@@ -25,6 +27,8 @@
             vm.request = {
                 name: vm.name,
                 addr: vm.addr,
+                username: vm.username,
+                password: vm.password,
             }
             $http
                 .post('/api/registries', vm.request)
