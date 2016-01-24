@@ -11,11 +11,20 @@ type Registry struct {
 	Addr           string                   `json:"addr,omitempty", gorethink:"addr,omitempty"`
 	Username       string                   `json:"username,omitempty", gorethink:"username,omitempty"`
 	Password       string                   `json:"password,omitempty", gorethink:"password,omitempty"`
+	TlsSkipVerify  bool                     `json:"tls_skip_verify,omitempty", gorethink:"tls_skip_verify,omitempty"`
 	registryClient *registry.RegistryClient `json:"-" gorethink:"-"`
 }
 
-func NewRegistry(id, name, addr, username, password string) (*Registry, error) {
-	rClient, err := registry.NewRegistryClient(addr, &tls.Config{InsecureSkipVerify: true}, username, password)
+func NewRegistry(id, name, addr, username, password string, tls_skip_verify bool) (*Registry, error) {
+	var tlsConfig *tls.Config
+
+	tlsConfig = nil;
+
+	if tls_skip_verify {
+		tlsConfig = &tls.Config{InsecureSkipVerify: true}
+	}
+
+	rClient, err := registry.NewRegistryClient(addr, tlsConfig, username, password)
 	if err != nil {
 		return nil, err
 	}
@@ -26,6 +35,7 @@ func NewRegistry(id, name, addr, username, password string) (*Registry, error) {
 		Addr:           addr,
 		Username:       username,
 		Password:       password,
+		TlsSkipVerify:  tls_skip_verify,
 		registryClient: rClient,
 	}, nil
 }

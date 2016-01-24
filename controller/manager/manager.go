@@ -702,9 +702,17 @@ func (m DefaultManager) AddRegistry(registry *shipyard.Registry) error {
 	}
 	req.SetBasicAuth(registry.Username, registry.Password)
 
+	var tlsConfig *tls.Config
+
+	tlsConfig = nil;
+
+	if registry.TlsSkipVerify {
+		tlsConfig = &tls.Config{InsecureSkipVerify: true}
+	}
+
 	// Create unsecured client 
 	trans := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig: tlsConfig,
 	}
 
 	client := &http.Client{Transport: trans}
@@ -755,7 +763,7 @@ func (m DefaultManager) Registries() ([]*shipyard.Registry, error) {
 
 	registries := []*shipyard.Registry{}
 	for _, r := range regs {
-		reg, err := shipyard.NewRegistry(r.ID, r.Name, r.Addr, r.Username, r.Password)
+		reg, err := shipyard.NewRegistry(r.ID, r.Name, r.Addr, r.Username, r.Password, r.TlsSkipVerify)
 		if err != nil {
 			return nil, err
 		}
@@ -780,7 +788,7 @@ func (m DefaultManager) Registry(name string) (*shipyard.Registry, error) {
 		return nil, err
 	}
 
-	registry, err := shipyard.NewRegistry(reg.ID, reg.Name, reg.Addr, reg.Username, reg.Password)
+	registry, err := shipyard.NewRegistry(reg.ID, reg.Name, reg.Addr, reg.Username, reg.Password, reg.TlsSkipVerify)
 	if err != nil {
 		return nil, err
 	}

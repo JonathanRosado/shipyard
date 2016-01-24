@@ -29,6 +29,7 @@ func (a *Api) addRegistry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Infof("TLS skip verify=%s", registry.TlsSkipVerify)
 	if err := a.manager.AddRegistry(registry); err != nil {
 		log.Errorf("error saving registry: %s", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
