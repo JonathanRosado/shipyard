@@ -133,6 +133,7 @@ func (a *Api) Run() error {
 	apiRouter.HandleFunc("/api/registries/{name}/repositories", a.repositories).Methods("GET")
 	apiRouter.HandleFunc("/api/registries/{name}/repositories/{repo:.*}", a.repository).Methods("GET")
 	apiRouter.HandleFunc("/api/registries/{name}/repositories/{repo:.*}", a.deleteRepository).Methods("DELETE")
+	apiRouter.HandleFunc("/api/docker/login", a.dockerLogin).Methods("POST")
 	apiRouter.HandleFunc("/api/servicekeys", a.serviceKeys).Methods("GET")
 	apiRouter.HandleFunc("/api/servicekeys", a.addServiceKey).Methods("POST")
 	apiRouter.HandleFunc("/api/servicekeys", a.removeServiceKey).Methods("DELETE")
