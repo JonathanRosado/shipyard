@@ -56,16 +56,11 @@ func (a *Api) swarmRedirect(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	log.Debugf("In swarm redirect")
 	if imageName := req.Header.Get("Reg-Image-Name"); imageName != "" {
-		log.Debugf("Reg-Image-Name detected!")
 		if registryHost := registryHost(imageName); registryHost != "" {
-			log.Debugf("image name contains registry! here it is %s", "https://"+registryHost)
 			if registry, err := a.manager.RegistryByAddress("https://" + registryHost); err == nil {
-				log.Debugf("setting auth header!")
 				req.Header.Set("X-Registry-Auth", authConfigB64(registry.Username, registry.Password, "", ""))
 			} else if registry, err := a.manager.RegistryByAddress("http://" + registryHost); err == nil {
-				log.Debugf("setting auth header!")
 				req.Header.Set("X-Registry-Auth", authConfigB64(registry.Username, registry.Password, "", ""))
 			}
 		}

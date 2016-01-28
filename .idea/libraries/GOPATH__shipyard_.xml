@@ -7,7 +7,6 @@
     <SOURCES />
     <excluded>
       <root url="file://$PROJECT_DIR$/../../shipyard/shipyard/Godeps/_workspace" />
-      <root url="file://$PROJECT_DIR$/controller/static/bower_components/semantic/src/_site" />
       <root url="file://$PROJECT_DIR$/.idea" />
       <root url="file://$PROJECT_DIR$/Godeps/_workspace" />
       <root url="file://$PROJECT_DIR$/../../shipyard/shipyard/.git" />

@@ -54,7 +54,6 @@
             <table class="ui sortable celled table">
                 <thead ng-hide="">
                     <tr>
-                        <th>Login</th>
                         <th>Name</th>
                         <th>Address</th>
                         <th></th>
@@ -62,12 +61,6 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="r in filteredRegistries = (vm.registries | filter:tableFilter) track by $index">
-                        <td class="collapsing">
-                            <div class="ui toggle checkbox" ng-click="vm.registriesInUse[$index]=!vm.registriesInUse[$index]; vm.loginRegistry($index)">
-                                <input type="checkbox" ng-model="vm.registriesInUse[$index]">
-                                <label></label>
-                            </div>
-                        </td>
                         <td>{{r.name}}</td>
                         <td>{{r.addr}}</td>
                         <td class="collapsing">
