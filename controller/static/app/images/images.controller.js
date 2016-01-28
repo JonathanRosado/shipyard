@@ -58,7 +58,8 @@
                     method: "POST",
                     withCredentials: true,
                     headers: {
-                        'X-Access-Token': localStorage.getItem("X-Access-Token")
+                        'X-Access-Token': localStorage.getItem("X-Access-Token"),
+                        'Reg-Image-Name': vm.pullImageName
                     }
                 })
                 .done(function(node) {
