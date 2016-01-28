@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"crypto/tls"
 
 	log "github.com/Sirupsen/logrus"
 	r "github.com/dancannon/gorethink"
@@ -694,10 +695,33 @@ func (m DefaultManager) Node(name string) (*shipyard.Node, error) {
 }
 
 func (m DefaultManager) AddRegistry(registry *shipyard.Registry) error {
-	resp, err := http.Get(fmt.Sprintf("%s/v2", registry.Addr))
+
+	// TODO: Please note the trailing forward slash / which is needed for Artifactory, else you get a 404.
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/v2/", registry.Addr), nil)
 	if err != nil {
 		return err
 	}
+
+	// TODO: need to integrate Jonathan's authentication modules for storing and retrieving auth credentials.
+	req.SetBasicAuth("admin", "admin123")
+
+	// TODO: this needs to be configurable like Jonathan did, from API / UI
+	var tlsConfig *tls.Config
+	tlsConfig = &tls.Config{InsecureSkipVerify: true}
+
+	// Create unsecured client 
+	trans := &http.Transport{
+		TLSClientConfig: tlsConfig,
+	}
+
+	client := &http.Client{Transport: trans}
+
+	resp, err := client.Do(req)
+
+	if err != nil {
+		return err
+	}
+
 	if resp.StatusCode != 200 {
 		return errors.New(resp.Status)
 	}

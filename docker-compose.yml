@@ -46,6 +46,8 @@ controller:
     links:
         - rethinkdb
         - swarm
+    volumes:
+        - .:/go/src/github.com/shipyard/shipyard
     volumes_from:
         - media
     ports:
