@@ -12,6 +12,8 @@ import (
 	"net/url"
 	"strings"
 	"time"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 var (
@@ -66,7 +68,9 @@ func (client *RegistryClient) doRequest(method string, path string, body []byte,
 	b := bytes.NewBuffer(body)
 
 	req, err := http.NewRequest(method, client.URL.String()+"/v2"+path, b)
+	log.Debugf("Method: %s   URL: %s", method, client.URL.String()+"/v2"+path)
 	if err != nil {
+		log.Debugf("Error on doRequest")
 		return nil, nil, err
 	}
 
@@ -84,6 +88,7 @@ func (client *RegistryClient) doRequest(method string, path string, body []byte,
 		if !strings.Contains(err.Error(), "connection refused") && client.tlsConfig == nil {
 			return nil, nil, fmt.Errorf("%s. Are you trying to connect to a TLS-enabled daemon without TLS?", err)
 		}
+		log.Debugf("Connection refused")
 		return nil, nil, err
 	}
 
@@ -91,14 +96,17 @@ func (client *RegistryClient) doRequest(method string, path string, body []byte,
 
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		log.Debugf("Error on ioutil.ReadAll")
 		return nil, nil, err
 	}
 
 	if resp.StatusCode == 404 {
+		log.Debugf("Error on resp.StatusCode == 404")
 		return nil, nil, ErrNotFound
 	}
 
 	if resp.StatusCode >= 400 {
+		log.Debugf("Error on resp.StatusCode >= 400")
 		return nil, nil, Error{StatusCode: resp.StatusCode, Status: resp.Status, msg: string(data)}
 	}
 
@@ -113,11 +121,13 @@ func (client *RegistryClient) Search(query string) ([]*Repository, error) {
 	uri := fmt.Sprintf("/_catalog")
 	data, _, err := client.doRequest("GET", uri, nil, nil)
 	if err != nil {
+		log.Debugf("Error on client.doRequest(GET, uri, nil, nil)")
 		return nil, err
 	}
 
 	res := &repo{}
 	if err := json.Unmarshal(data, &res); err != nil {
+		log.Debugf("Error on json.Unmarshal(data, &res)")
 		return nil, err
 	}
 
@@ -128,6 +138,7 @@ func (client *RegistryClient) Search(query string) ([]*Repository, error) {
 		if strings.Index(k, query) == 0 {
 			tl, err := client.getTags(k)
 			if err != nil {
+				log.Debugf("Error on resp.StatusCode >= 400")
 				return nil, err
 			}
 

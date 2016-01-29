@@ -802,7 +802,6 @@ func (m DefaultManager) Registry(name string) (*shipyard.Registry, error) {
 func (m DefaultManager) RegistryByAddress(addr string) (*shipyard.Registry, error) {
 	res, err := r.Table(tblNameRegistries).Filter(map[string]string{"addr": addr}).Run(m.session)
 	if err != nil {
-		log.Debugf("database error!! %s", err)
 		return nil, err
 	}
 	if res.IsNil() {
