@@ -34,9 +34,29 @@ media:
     command: -c "make media && sleep infinity"
     working_dir: /go/src/github.com/shipyard/shipyard
     volumes:
-        - "/go/src/github.com/shipyard/shipyard/controller/static"
+        - "./controller/static:/go/src/github.com/shipyard/shipyard/controller/static"
     environment:
         no_proxy: "localhost,127.0.0.1,proxy,swarm,media,rethinkdb,myd-vm23183.hpswlabs.adapps.hp.com"
+
+registry:
+    image: registry:2
+    volumes:
+      - ./registry-assets/data:/var/lib/registry
+    ports:
+      - "80:5000"
+    environment:
+      - "SETTINGS_FLAVOR=local"
+      - "SEARCH_BACKEND=sqlalchemy"
+      - "STORAGE_PATH=/registry"
+
+authproxy:
+  image: "nginx:1.9"
+  ports:
+    - 443:443
+  links:
+    - registry:registry
+  volumes:
+    - ./registry-assets/auth:/etc/nginx/conf.d
 
 controller:
     build: .

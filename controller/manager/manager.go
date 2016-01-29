@@ -107,6 +107,7 @@ type (
 		RemoveRegistry(registry *shipyard.Registry) error
 		Registries() ([]*shipyard.Registry, error)
 		Registry(name string) (*shipyard.Registry, error)
+		RegistryByAddress(addr string) (*shipyard.Registry, error)
 
 		CreateConsoleSession(c *shipyard.ConsoleSession) error
 		RemoveConsoleSession(c *shipyard.ConsoleSession) error
@@ -702,12 +703,15 @@ func (m DefaultManager) AddRegistry(registry *shipyard.Registry) error {
 		return err
 	}
 
-	// TODO: need to integrate Jonathan's authentication modules for storing and retrieving auth credentials.
-	req.SetBasicAuth("admin", "admin123")
+	req.SetBasicAuth(registry.Username, registry.Password)
 
-	// TODO: this needs to be configurable like Jonathan did, from API / UI
 	var tlsConfig *tls.Config
-	tlsConfig = &tls.Config{InsecureSkipVerify: true}
+
+	tlsConfig = nil;
+
+	if registry.TlsSkipVerify {
+		tlsConfig = &tls.Config{InsecureSkipVerify: true}
+	}
 
 	// Create unsecured client 
 	trans := &http.Transport{
@@ -721,7 +725,6 @@ func (m DefaultManager) AddRegistry(registry *shipyard.Registry) error {
 	if err != nil {
 		return err
 	}
-
 	if resp.StatusCode != 200 {
 		return errors.New(resp.Status)
 	}
@@ -763,7 +766,7 @@ func (m DefaultManager) Registries() ([]*shipyard.Registry, error) {
 
 	registries := []*shipyard.Registry{}
 	for _, r := range regs {
-		reg, err := shipyard.NewRegistry(r.ID, r.Name, r.Addr)
+		reg, err := shipyard.NewRegistry(r.ID, r.Name, r.Addr, r.Username, r.Password, r.TlsSkipVerify)
 		if err != nil {
 			return nil, err
 		}
@@ -788,8 +791,33 @@ func (m DefaultManager) Registry(name string) (*shipyard.Registry, error) {
 		return nil, err
 	}
 
-	registry, err := shipyard.NewRegistry(reg.ID, reg.Name, reg.Addr)
+	registry, err := shipyard.NewRegistry(reg.ID, reg.Name, reg.Addr, reg.Username, reg.Password, reg.TlsSkipVerify)
 	if err != nil {
+		return nil, err
+	}
+
+	return registry, nil
+}
+
+func (m DefaultManager) RegistryByAddress(addr string) (*shipyard.Registry, error) {
+	res, err := r.Table(tblNameRegistries).Filter(map[string]string{"addr": addr}).Run(m.session)
+	if err != nil {
+		log.Debugf("database error!! %s", err)
+		return nil, err
+	}
+	if res.IsNil() {
+		log.Debugf("its nil!! it found nothing")
+		return nil, ErrRegistryDoesNotExist
+	}
+	var reg *shipyard.Registry
+	if err := res.One(&reg); err != nil {
+		log.Debugf("problem with res.One")
+		return nil, err
+	}
+
+	registry, err := shipyard.NewRegistry(reg.ID, reg.Name, reg.Addr, reg.Username, reg.Password, reg.TlsSkipVerify)
+	if err != nil {
+		log.Debugf("Problem creating new registry")
 		return nil, err
 	}
 
