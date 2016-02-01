@@ -1,66 +1,109 @@
 package api
 
 import (
-	"bytes"
+//	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/shipyard/shipyard/auth"
 	"github.com/shipyard/shipyard/controller/mock_test"
 	"github.com/stretchr/testify/assert"
+	"github.com/shipyard/shipyard"
+	"bytes"
 )
 
-// ENDPOINTS TO TEST
-
-//func (a *Api) registries(w http.ResponseWriter, r *http.Request)
-//
-//func (a *Api) addRegistry(w http.ResponseWriter, r *http.Request)
-//
-//func (a *Api) registry(w http.ResponseWriter, r *http.Request)
-//
-//func (a *Api) removeRegistry(w http.ResponseWriter, r *http.Request)
-//
-//func (a *Api) repositories(w http.ResponseWriter, r *http.Request)
-//
-//func (a *Api) repository(w http.ResponseWriter, r *http.Request)
-//
-//func (a *Api) deleteRepository(w http.ResponseWriter, r *http.Request)
-//
-//func (a *Api) inspectRepository(w http.ResponseWriter, r *http.Request)
-
-// TEST CASES (Take a look at accounts_test for an example on how test handlers)
-
 func TestApiGetRegistries(t *testing.T) {
+	api, err := getTestApi()
+	if err != nil {
+		t.Fatal(err)
+	}
 
+	ts := httptest.NewServer(http.HandlerFunc(api.registries))
+	defer ts.Close()
+
+	res, err := http.Get(ts.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, res.StatusCode, 200, "expected response code 200")
+	regs := []*shipyard.Registry{}
+	if err := json.NewDecoder(res.Body).Decode(&regs); err != nil {
+		t.Fatal(err)
+	}
+
+	assert.NotEqual(t, len(regs), 0, "expected accounts; received none")
+
+	reg := regs[0]
+
+	assert.Equal(t, reg.ID, mock_test.TestRegistry.ID, fmt.Sprintf("expected ID %s; got %s", mock_test.TestRegistry.ID, reg.ID))
 }
 
 func TestApiAddRegistry(t *testing.T) {
+	api, err := getTestApi()
+	if err != nil {
+		t.Fatal(err)
+	}
 
+	ts := httptest.NewServer(http.HandlerFunc(api.addRegistry))
+	defer ts.Close()
+
+	reg := []byte(`{"name":"test-registry","addr":"http://localhost:5000","username":"admin","password":"admin"}`)
+
+	res, err := http.Post(ts.URL, "application/json", bytes.NewBuffer(reg))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, res.StatusCode, 204, "expected response code 200")
 }
 
 func TestApiGetRegistry(t *testing.T) {
+	api, err := getTestApi()
+	if err != nil {
+		t.Fatal(err)
+	}
 
+	ts := httptest.NewServer(http.HandlerFunc(api.registry))
+	defer ts.Close()
+
+	res, err := http.Get(ts.URL + "/api/registries/" + mock_test.TestRegistry.Name)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, res.StatusCode, 200, "expected response code 200")
+	reg := shipyard.Registry{}
+	if err := json.NewDecoder(res.Body).Decode(&reg); err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, reg.ID, mock_test.TestRegistry.ID, fmt.Sprintf("expected ID %s; got %s", mock_test.TestRegistry.ID, reg.ID))
 }
 
 func TestApiRemoveRegistry(t *testing.T) {
+	api, err := getTestApi()
+	if err != nil {
+		t.Fatal(err)
+	}
 
-}
+	transport := &http.Transport{}
+	client := &http.Client{Transport: transport}
 
-func TestApiGetRepositories(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(api.removeRegistry))
+	defer ts.Close()
 
-}
+	req, err := http.NewRequest("DELETE", ts.URL + "/api/registries/" + mock_test.TestRegistry.Name, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-func TestApiGetRepository(t *testing.T) {
+	res, err := client.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-}
-
-func TestApiDeleteRepository(t *testing.T) {
-
-}
-
-func TestApiInspectRepository(t *testing.T) {
-
+	assert.Equal(t, res.StatusCode, 200, "expected response code 200")
 }
