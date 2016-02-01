@@ -54,5 +54,19 @@ Run the following:
 * run `make media` to build the media
 * run `./controller -h` for options
 
+To get a development environment using docker-compose you will need:
+
+* docker-compose version 1.5.2+
+* docker-py version: 1.5.0+
+* CPython version: 2.7.9+
+
+* run `docker-compose up`
+
+To run the test suite:
+
+* make test
+OR
+* run `docker-compose -f docker-compose.yml -f docker-compose.test.yml up`
+
 # License
 Shipyard is licensed under the Apache License, Version 2.0. See LICENSE for full license text.

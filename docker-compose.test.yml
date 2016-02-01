@@ -1,5 +1,5 @@
 controller:
-    command: -c "make build && make build && make test"
+    command: -c "make build && make test"
     links:
         - rethinkdb
         - swarm
