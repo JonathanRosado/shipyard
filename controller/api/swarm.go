@@ -118,7 +118,7 @@ func (a *Api) swarmRedirect(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if imageName := req.Header.Get("Reg-Image-Name"); imageName != "" {
+	if imageName := req.Header.Get("Reg-Image-Name"); imageName != "" && strings.Count(imageName, "/") > 0 {
 		registry, err := a.findRegistry(imageName)
 
 		if err == nil {

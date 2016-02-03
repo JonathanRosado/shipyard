@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="748f54de-0ba5-4b32-b252-d2d63051cb22" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controller/api/swarm.go" afterPath="$PROJECT_DIR$/controller/api/swarm.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docker-compose.test.yml" afterPath="$PROJECT_DIR$/docker-compose.test.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/readme.md" afterPath="$PROJECT_DIR$/readme.md" />
     </list>
     <ignored path="shipyard.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -62,14 +61,34 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="swarm.go" pinned="false" current-in-tab="true">
+      <file leaf-file-name="swarm.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/controller/api/swarm.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.53731346">
-              <caret line="95" column="56" selection-start-line="95" selection-start-column="56" selection-end-line="95" selection-end-column="56" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="120" column="106" selection-start-line="120" selection-start-column="106" selection-end-line="120" selection-end-column="106" />
               <folding>
                 <element signature="e#13#193#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Dockerfile.build" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Dockerfile.build">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Dockerfile" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/controller/Dockerfile">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.01725791">
+              <caret line="1" column="21" selection-start-line="1" selection-start-column="14" selection-end-line="1" selection-end-column="21" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -112,6 +131,8 @@
         <option value="$PROJECT_DIR$/docker-compose.test.yml" />
         <option value="$PROJECT_DIR$/readme.md" />
         <option value="$PROJECT_DIR$/controller/api/swarm.go" />
+        <option value="$PROJECT_DIR$/Dockerfile.build" />
+        <option value="$PROJECT_DIR$/controller/Dockerfile" />
       </list>
     </option>
   </component>
@@ -409,12 +430,12 @@
       <updated>1454336311530</updated>
       <workItem from="1454336316117" duration="655000" />
       <workItem from="1454336993992" duration="46000" />
-      <workItem from="1454337041405" duration="15642000" />
+      <workItem from="1454337041405" duration="18319000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16343000" />
+    <option name="totallyTimeSpent" value="19020000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1871" y="-4" width="1871" height="1204" extended-state="6" />
@@ -584,11 +605,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/controller/api/swarm.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.53731346">
-          <caret line="95" column="56" selection-start-line="95" selection-start-column="56" selection-end-line="95" selection-end-column="56" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="120" column="106" selection-start-line="120" selection-start-column="106" selection-end-line="120" selection-end-column="106" />
           <folding>
             <element signature="e#13#193#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Dockerfile.build">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controller/Dockerfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.01725791">
+          <caret line="1" column="21" selection-start-line="1" selection-start-column="14" selection-end-line="1" selection-end-column="21" />
+          <folding />
         </state>
       </provider>
     </entry>
