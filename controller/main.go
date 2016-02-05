@@ -50,7 +50,7 @@ func main() {
 				cli.StringFlag{
 					Name:  "rethinkdb-database",
 					Usage: "RethinkDB database name",
-					Value: "shipyard",
+					Value: "shipyardshipyard",
 				},
 				cli.BoolFlag{
 					Name:  "disable-usage-info",

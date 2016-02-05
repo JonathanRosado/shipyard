@@ -42,6 +42,19 @@ media:
     environment:
         no_proxy: "localhost,127.0.0.1,proxy,swarm,media,rethinkdb,myd-vm23183.hpswlabs.adapps.hp.com"
 
+registry:
+    entrypoint: /bin/bash
+    image: registry:2
+    ports:
+        - "5000:5000"
+    environment:
+        - REGISTRY_AUTH=htpasswd
+        - REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm
+        - REGISTRY_AUTH_HTPASSWD_PATH=/htpasswd
+        - REGISTRY_HTTP_TLS_CERTIFICATE=/domain.crt
+        - REGISTRY_HTTP_TLS_KEY=/domain.key
+    command: -c "printf 'AU\nname\ncity\ncompany\nsection\nfqdn\naddress\n' | openssl req -newkey rsa:4096 -nodes -sha256 -keyout /domain.key -x509 -days 365 -out /domain.crt; htpasswd -Bbn testuser testpassword > /htpasswd; /bin/registry /etc/docker/registry/config.yml"
+
 controller:
     restart: always
     build: .
