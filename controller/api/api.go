@@ -51,6 +51,11 @@ type (
 	}
 )
 
+var (
+	ApiRouter *mux.Router
+	SwarmRouter *mux.Router
+)
+
 func writeCorsHeaders(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 	w.Header().Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
@@ -143,6 +148,9 @@ func (a *Api) Run() error {
 	apiRouter.HandleFunc("/api/consolesession/{container}", a.createConsoleSession).Methods("GET")
 	apiRouter.HandleFunc("/api/consolesession/{token}", a.consoleSession).Methods("GET")
 	apiRouter.HandleFunc("/api/consolesession/{token}", a.removeConsoleSession).Methods("DELETE")
+
+	// Export apiRouter for testing
+	ApiRouter = apiRouter
 
 	// global handler
 	globalMux.Handle("/", http.FileServer(http.Dir("static")))
@@ -263,6 +271,9 @@ func (a *Api) Run() error {
 			swarmRouter.Path(localRoute).Methods(localMethod).HandlerFunc(wrap)
 		}
 	}
+
+	// Export swarmRouter for testing
+	SwarmRouter = swarmRouter
 
 	swarmAuthRouter := negroni.New()
 	swarmAuthRequired := mAuth.NewAuthRequired(controllerManager, a.authWhitelistCIDRs)

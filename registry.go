@@ -1,8 +1,8 @@
 package shipyard
 
 import (
-	registry "github.com/shipyard/shipyard/registry/v2"
 	"crypto/tls"
+	registry "github.com/shipyard/shipyard/registry/v2"
 )
 
 type Registry struct {
@@ -12,7 +12,7 @@ type Registry struct {
 	Username       string                   `json:"username,omitempty" gorethink:"username,omitempty"`
 	Password       string                   `json:"password,omitempty" gorethink:"password,omitempty"`
 	TlsSkipVerify  bool                     `json:"tls_skip_verify,omitempty" gorethink:"tls_skip_verify,omitempty"`
-	registryClient *registry.RegistryClient `json:"-" gorethink:"-"`
+	registryClient *registry.RegistryClient
 }
 
 func NewRegistry(id, name, addr, username, password string, tls_skip_verify bool) (*Registry, error) {
